@@ -14,51 +14,65 @@ public class Book {
 
   int year;
 
-  public Book(String title, String author, int year) {
+  String userId;
+
+  public Book() {}
+
+  public Book(String title, String author, int year, String userId) {
     this.title = title;
     this.author = author;
     this.year = year;
+    this.userId = userId;
   }
 
-  public long getId() {
-    return this.id;
+  public Long getId() {
+    return id;
   }
-  
+
   public void setId(Long id) {
-  	this.id=id;
+    this.id = id;
   }
-  
+
   public String getTitle() {
-  	return this.title;
+    return title;
   }
-  
+
   public void setTitle(String title) {
-  	this.title=title;
+    this.title = title;
   }
-   public String getAuthor() {
-  	return this.author;
+
+  public String getAuthor() {
+    return author;
   }
-  
+
   public void setAuthor(String author) {
-  	this.author=author;
+    this.author = author;
   }
-  
+
   public int getYear() {
-  	return this.year;
+    return year;
   }
-  
+
   public void setYear(int year) {
-  	this.year=year;
+    this.year = year;
   }
-  
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
   @Override
   public String toString() {
     return "{" +
-        "id:" + this.id +
-        ", title:'" + this.title + '\'' +
-        ", author:'" + this.author + '\'' +
-        ", year:" + this.year +
+        "id:" + id +
+        ", title:'" + title + '\'' +
+        ", author:'" + author + '\'' +
+        ", year:" + year +
+        ", userId:" + userId +
         '}';
   }
 }

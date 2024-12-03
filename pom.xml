@@ -19,6 +19,7 @@
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
 	</properties>
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -26,6 +27,10 @@
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>spring-cloud-gcp-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -92,10 +97,11 @@
             	<version>2.4.4</version>
             	<configuration>
                 	<version>1</version>
-                	<projectId>springbooks2024</projectId>
+                	<projectId>clear-veld-442122-e4</projectId>
             	</configuration>
         </plugin>
 		</plugins>
 	</build>
+
 
 </project>

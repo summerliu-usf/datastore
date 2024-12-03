@@ -21,8 +21,8 @@ public class DemoApplication {
   }
 
   @ShellMethod("Saves a book to Cloud Datastore: save-book <title> <author> <year>")
-  public String saveBook(String title, String author, int year) {
-     Book savedBook = this.bookRepository.save(new Book(title, author, year));
+  public String saveBook(String title, String author, int year, String userId) {
+     Book savedBook = this.bookRepository.save(new Book(title, author, year, userId));
      return savedBook.toString();
   }
 
@@ -54,4 +54,11 @@ public class DemoApplication {
   public void removeAllBooks() {
      this.bookRepository.deleteAll();
   }
-}
+
+
+@ShellMethod("Loads books by user ID: find-by-user-id <userId>")
+public String findByUserId(String userId) {
+    List<Book> books = this.bookRepository.findByUserId(userId);
+    return books.toString();
+}}
+
