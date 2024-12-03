@@ -2,71 +2,43 @@ package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@RequestMapping("/api/book")
 public class BookController {
-  private final BookRepository bookRepository;
 
-  public BookController(BookRepository bookRepository) {
-    this.bookRepository = bookRepository;
+  @Autowired
+  private BookService bookService;
+
+  @Autowired
+  private ChapterService chapterService;
+
+  // Get all books
+  @GetMapping
+  public List<Book> getAllBooks() {
+    return bookService.getAllBooks();
   }
 
-  @PostMapping("/saveBook")
-  @CrossOrigin(origins = "*")
-  public String saveBook(@RequestBody Book book) {
-    if (book == null) {
-      return "The book is invalid";
+  // Get chapters of a specific book
+  @GetMapping("/{bookId}/chapters")
+  public List<Chapter> getChaptersList(@PathVariable String bookId) {
+    return bookService.getChapterList(bookId);
+  }
+
+  // Get a specific chapter of a book
+  @GetMapping("/{bookId}/chapters/{chapterId}")
+  public Optional<Chapter> getSpecificChapter(
+          @PathVariable String bookId,
+          @PathVariable int chapterId) {
+    // Optional: Verify the chapter belongs to the book
+    Optional<Chapter> chapter = chapterService.getChapterById(bookId, chapterId);
+    if (chapter.isPresent() && !chapter.get().getBookId().equals(bookId)) {
+      throw new IllegalArgumentException("Chapter does not belong to the specified book");
     }
-    this.bookRepository.save(book);
-    return "success";
-  }
-
-  @GetMapping("/findByAuthor")
-  @ResponseBody
-  @CrossOrigin(origins = "*")
-  public List<Book> findByAuthor(@RequestParam String author) {
-    Iterable<Book> books = this.bookRepository.findByAuthor(author);
-    List<Book> bookList = new ArrayList<>();
-    books.forEach(bookList::add);
-    return bookList;
-  }
-
-  @GetMapping("/findAllBooks")
-  @ResponseBody
-  @CrossOrigin(origins = "*")
-  public List<Book> findAllBooks() {
-    Iterable<Book> books = this.bookRepository.findAll();
-    List<Book> bookList = new ArrayList<>();
-    books.forEach(bookList::add);
-    return bookList;
-  }
-
-  @GetMapping("/findByUserId")
-  @ResponseBody
-  @CrossOrigin(origins = "*")
-  public List<Book> findByUserId(@RequestParam String userId) {
-    Iterable<Book> books = this.bookRepository.findByUserId(userId);
-    List<Book> bookList = new ArrayList<>();
-    books.forEach(bookList::add);
-    return bookList;
-  }
-
-  @GetMapping("/findByYear")
-  @ResponseBody
-  @CrossOrigin(origins = "*")
-  public List<Book> findByYear(@RequestParam int year) {
-    Iterable<Book> books = this.bookRepository.findByYearGreaterThan(year);
-    List<Book> bookList = new ArrayList<>();
-    books.forEach(bookList::add);
-    return bookList;
+    return chapter;
   }
 }

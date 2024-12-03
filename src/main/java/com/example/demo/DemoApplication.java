@@ -10,55 +10,30 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+
 @ShellComponent
 @SpringBootApplication
 public class DemoApplication {
-  @Autowired
-  BookRepository bookRepository;
+    @Autowired
+    BookRepository bookRepository;
 
-  public static void main(String[] args) {
-     SpringApplication.run(DemoApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
-  @ShellMethod("Saves a book to Cloud Datastore: save-book <title> <author> <year>")
-  public String saveBook(String title, String author, int year, String userId) {
-     Book savedBook = this.bookRepository.save(new Book(title, author, year, userId));
-     return savedBook.toString();
-  }
+    @ShellMethod("Saves a book to Cloud Datastore: ")
+    public String saveBook(String title, String description, String coverImageUrl, String chapterList) {
+        Book savedBook = BookService.addBook(title, coverImageUrl, chapterList);
+        savedBook.setDescription(description);
+        return savedBook.toString();
+    }
 
-  @ShellMethod("Loads all books")
-  public String findAllBooks() {
-     Iterable<Book> books = this.bookRepository.findAll();
-     return Lists.newArrayList(books).toString();
-  }
-
-  @ShellMethod("Loads books by author: find-by-author <author>")
-  public String findByAuthor(String author) {
-     List<Book> books = this.bookRepository.findByAuthor(author);
-     return books.toString();
-  }
-
-  @ShellMethod("Loads books published after a given year: find-by-year-after <year>")
-  public String findByYearAfter(int year) {
-     List<Book> books = this.bookRepository.findByYearGreaterThan(year);
-     return books.toString();
-  }
-
-  @ShellMethod("Loads books by author and year: find-by-author-year <author> <year>")
-  public String findByAuthorYear(String author, int year) {
-     List<Book> books = this.bookRepository.findByAuthorAndYear(author, year);
-     return books.toString();
-  }
-
-  @ShellMethod("Removes all books")
-  public void removeAllBooks() {
-     this.bookRepository.deleteAll();
-  }
+    @ShellMethod("Loads all books")
+    public String findAllBooks() {
+        Iterable<Book> books = this.bookRepository.findAll();
+        return Lists.newArrayList(books).toString();
+    }
 
 
-@ShellMethod("Loads books by user ID: find-by-user-id <userId>")
-public String findByUserId(String userId) {
-    List<Book> books = this.bookRepository.findByUserId(userId);
-    return books.toString();
-}}
+}
 

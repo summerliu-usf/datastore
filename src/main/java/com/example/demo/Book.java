@@ -3,76 +3,96 @@ package com.example.demo;
 import com.google.cloud.spring.data.datastore.core.mapping.Entity;
 import org.springframework.data.annotation.Id;
 
-@Entity(name = "books")
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Entity(name = "Book") // Maps to the "Book" kind in Datastore
 public class Book {
-  @Id
-  Long id;
+    @Id
+    private String id; // Unique identifier for the book
+    private String title; // Book title
+    private String description; // Brief description of the book
+    private String coverImageUrl; // URL to the book's cover image
+    private ArrayList<Chapter> chapterList;
+    private ChapterRepository chapterRepository;
 
-  String title;
+    // Constructors
+    public Book() {}
 
-  String author;
+    public Book(String id, String title, String description, String coverImageUrl, String chapterList) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.coverImageUrl = coverImageUrl;
+        this.chapterList = addAllChapters(chapterList);
+    }
 
-  int year;
+    // Getters and setters
+    public String getId() {
+        return id;
+    }
 
-  String userId;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public Book() {}
+    public String getTitle() {
+        return title;
+    }
 
-  public Book(String title, String author, int year, String userId) {
-    this.title = title;
-    this.author = author;
-    this.year = year;
-    this.userId = userId;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
+    }
 
-  public String getAuthor() {
-    return author;
-  }
+    public ArrayList<Chapter> getChapterList(){
+        return this.chapterList;
+    }
 
-  public void setAuthor(String author) {
-    this.author = author;
-  }
+    public ArrayList<Chapter> addAllChapters(String lstOfChapters) {
+        // Create and save the chapter instance
+        int chapId = 1;
+        String[] result = lstOfChapters.split(";");
+        List<String> lst = Arrays.asList(result);
+        ArrayList<Chapter> res = new ArrayList<>();
+        for (String title: lst){
+            Chapter chapter = new Chapter();
+            chapter.setBookId(this.id);
+            chapter.setTitle(title);
+            chapter.setId(chapId);
+            chapterRepository.save(chapter);
+            res.add(chapter);
+            chapId++;
+        }
+        return res;
+    }
 
-  public int getYear() {
-    return year;
-  }
+    public ArrayList<Chapter> getChapters() {
+        return this.chapterList;
+    }
 
-  public void setYear(int year) {
-    this.year = year;
-  }
-
-  public String getUserId() {
-    return userId;
-  }
-
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
-
-  @Override
-  public String toString() {
-    return "{" +
-        "id:" + id +
-        ", title:'" + title + '\'' +
-        ", author:'" + author + '\'' +
-        ", year:" + year +
-        ", userId:" + userId +
-        '}';
-  }
+    public ArrayList<String> getChapterTitles() {
+        ArrayList<String> lst = new ArrayList<>();
+        for (Chapter chapter: chapterList) {
+            lst.add(chapter.getTitle());
+        }
+        return lst;
+    }
 }
