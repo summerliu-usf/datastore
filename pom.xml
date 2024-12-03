@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 		<spring-cloud-gcp.version>4.7.2</spring-cloud-gcp.version>
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
+		<mainClass>com.example.demo.DemoApplication</mainClass>
 	</properties>
 	<dependencies>
 
